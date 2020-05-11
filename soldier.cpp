@@ -10,6 +10,7 @@ Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id) {
     this->storage = storage;
     this->id = id;
     this->progress = ".";
+    this->hp = 5;
 }
 
 
@@ -53,6 +54,13 @@ void Soldier::reload(int n) {
         this->progress = to_string(prog);
     }
     storage[storage_index]->unlock();
+}
+
+void Soldier::shoot(vector<Soldier*> enemies, int n){
+    for (int i = 0; i <= n; i++) {
+        int hit = rand() % n;
+        enemies[hit]->hp--;
+    }
 }
 
 

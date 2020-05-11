@@ -12,9 +12,10 @@ public:
     int id;
     string status;
     string progress;
+    void shoot(vector<Soldier*> enemies, int n);
+    int hp;
 
 private:
     Cannon* cannon;
     vector<Storage*> storage;
-    
 };

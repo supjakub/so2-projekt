@@ -17,12 +17,13 @@ vector<Soldier*> red_soldiers;
 vector<Cannon*> red_cannons;
 vector<Storage*> red_storages;
 
-void execute(Soldier* soldier, atomic<bool>& running)
+void execute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> enemies)
 {
     while(running)
     {
-        soldier->fire();
         soldier->reload(STORAGES_NO);
+        soldier->fire();
+        soldier->shoot(enemies, SOLDIERS_NO);
     }
 }
 
@@ -56,6 +57,7 @@ void display(atomic<bool> &displaying) {
         for (int i = 0; i < SOLDIERS_NO; i++) {
             mvprintw(i+1,5,blue_soldiers[i]->status.c_str());
             mvprintw(i+1,18,blue_soldiers[i]->progress.c_str());
+            mvprintw(i+1,20,to_string(blue_soldiers[i]->hp).c_str());
         }
         for (int i = 0; i < STORAGES_NO; i++)
             mvprintw(i + 18,5,blue_storages[i]->status.c_str());
@@ -92,9 +94,9 @@ int main(){
     atomic<bool> running{true};
 
     for (int i = 0; i < SOLDIERS_NO; i++)
-        soldier_threads[i] = thread(execute, blue_soldiers[i], ref(running));
+        soldier_threads[i] = thread(execute, blue_soldiers[i], ref(running), red_soldiers);
     for (int i = SOLDIERS_NO, j = 0; i < SOLDIERS_NO * 2; i++, j++)
-        soldier_threads[i] = thread(execute, red_soldiers[j], ref(running));
+        soldier_threads[i] = thread(execute, red_soldiers[j], ref(running), blue_soldiers);
 
     atomic<bool> displaying{true};
 
