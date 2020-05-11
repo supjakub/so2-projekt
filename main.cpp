@@ -10,9 +10,12 @@ using namespace std;
 const int SOLDIERS_NO = 15;
 const int STORAGES_NO = 3;
 
-vector<Soldier*> soldiers;
-vector<Cannon*> cannons;
-vector<Storage*> storages;
+vector<Soldier*> blue_soldiers;
+vector<Cannon*> blue_cannons;
+vector<Storage*> blue_storages;
+vector<Soldier*> red_soldiers;
+vector<Cannon*> red_cannons;
+vector<Storage*> red_storages;
 
 void execute(Soldier* soldier, atomic<bool>& running)
 {
@@ -41,11 +44,11 @@ void display(atomic<bool> &displaying) {
     while(displaying) {
         usleep(100);
         for (int i = 0; i < SOLDIERS_NO; i++) {
-            mvprintw(i+1,15,soldiers[i]->status.c_str());
-            mvprintw(i+1,30,soldiers[i]->progress.c_str());
+            mvprintw(i+1,15,blue_soldiers[i]->status.c_str());
+            mvprintw(i+1,30,blue_soldiers[i]->progress.c_str());
         }
         for (int i = 0; i < STORAGES_NO; i++)
-            mvprintw(i + 18,15,storages[i]->status.c_str());
+            mvprintw(i + 18,15,blue_storages[i]->status.c_str());
         refresh();
     }
     clear();
@@ -55,19 +58,26 @@ int main(){
     initscr();
 
     srand(time(NULL));
-    for (int i = 0; i < STORAGES_NO; i++)
-        storages.push_back(new Storage());
-    for (int i = 0; i < SOLDIERS_NO; i++) {
-        cannons.push_back(new Cannon());
-        soldiers.push_back(new Soldier(cannons[i], storages, i));
+    for (int i = 0; i < STORAGES_NO; i++) {
+        blue_storages.push_back(new Storage());
+        red_storages.push_back(new Storage());
     }
 
-    thread soldier_threads[SOLDIERS_NO];
+    for (int i = 0; i < SOLDIERS_NO; i++) {
+        blue_cannons.push_back(new Cannon());
+        blue_soldiers.push_back(new Soldier(blue_cannons[i], blue_storages, i));
+        red_cannons.push_back(new Cannon());
+        red_soldiers.push_back(new Soldier(red_cannons[i], red_storages, i));
+    }
+
+    thread soldier_threads[SOLDIERS_NO * 2];
 
     atomic<bool> running{true};
 
     for (int i = 0; i < SOLDIERS_NO; i++)
-        soldier_threads[i] = thread(execute, soldiers[i], ref(running));
+        soldier_threads[i] = thread(execute, blue_soldiers[i], ref(running));
+    for (int i = SOLDIERS_NO, j = 0; i < SOLDIERS_NO * 2; i++, j++)
+        soldier_threads[i] = thread(execute, red_soldiers[j], ref(running));
 
     atomic<bool> displaying{true};
 
@@ -82,7 +92,7 @@ int main(){
     running = false;
     displaying = false;
 
-    for (int i = 0; i < SOLDIERS_NO; i++)
+    for (int i = 0; i < SOLDIERS_NO * 2; i++)
         soldier_threads[i].join();
 
     display_thread.join();
