@@ -27,14 +27,24 @@ void execute(Soldier* soldier, atomic<bool>& running)
 }
 
 void displayGUI() {
+    mvprintw(0,0,"Zolnierze niebiescy");
     for (int i = 0; i < SOLDIERS_NO; i++) {
         move(i + 1, 0);
-        printw("Zolnierz nr ");
         printw(to_string(i + 1).c_str());
     }
+    mvprintw(17,0,"Magazyny niebieskie");
     for (int i = 0; i < STORAGES_NO; i++) {
         move(i + 18, 0);
-        printw("Magazyn nr ");
+        printw(to_string(i + 1).c_str());
+    }
+    mvprintw(0,50,"Zolnierze czerwoni");
+    for (int i = 0; i < SOLDIERS_NO; i++) {
+        move(i + 1, 50);
+        printw(to_string(i + 1).c_str());
+    }
+    mvprintw(17,50,"Magazyny czerwone");
+    for (int i = 0; i < STORAGES_NO; i++) {
+        move(i + 18, 50);
         printw(to_string(i + 1).c_str());
     }
 }
@@ -44,11 +54,18 @@ void display(atomic<bool> &displaying) {
     while(displaying) {
         usleep(100);
         for (int i = 0; i < SOLDIERS_NO; i++) {
-            mvprintw(i+1,15,blue_soldiers[i]->status.c_str());
-            mvprintw(i+1,30,blue_soldiers[i]->progress.c_str());
+            mvprintw(i+1,5,blue_soldiers[i]->status.c_str());
+            mvprintw(i+1,18,blue_soldiers[i]->progress.c_str());
         }
         for (int i = 0; i < STORAGES_NO; i++)
-            mvprintw(i + 18,15,blue_storages[i]->status.c_str());
+            mvprintw(i + 18,5,blue_storages[i]->status.c_str());
+
+        for (int i = 0; i < SOLDIERS_NO; i++) {
+            mvprintw(i+1,55,red_soldiers[i]->status.c_str());
+            mvprintw(i+1,68,red_soldiers[i]->progress.c_str());
+        }
+        for (int i = 0; i < STORAGES_NO; i++)
+            mvprintw(i + 18,55,red_storages[i]->status.c_str());
         refresh();
     }
     clear();
