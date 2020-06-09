@@ -8,11 +8,11 @@ class Soldier {
 public:
     Soldier(Cannon* cannon, vector<Storage*> storage, int id);
     void fire();
-    void reload(int n);
+    void reload();
     int id;
     string status;
     string progress;
-    void shoot(vector<Soldier*> enemies, int n);
+    void shoot(vector<Soldier*> enemies);
     int hp;
 
 private:

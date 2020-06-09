@@ -29,13 +29,13 @@ void Soldier::fire() {
     cannon->unlock();
 }
 
-void Soldier::reload(int n) {
+void Soldier::reload() {
     this->status = "czeka       ";
     this->progress = ".";
     bool flag = false;
     int storage_index;
     do {
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < 3; i++) {
             if (this->storage[i]->lock()) {
                 flag = true;
                 storage_index = i;
@@ -56,9 +56,9 @@ void Soldier::reload(int n) {
     storage[storage_index]->unlock();
 }
 
-void Soldier::shoot(vector<Soldier*> enemies, int n){
-    for (int i = 0; i <= n; i++) {
-        int hit = rand() % n;
+void Soldier::shoot(vector<Soldier*> enemies){
+    int hit = rand() % 15;
+    if (enemies[hit]->hp > 0) {
         enemies[hit]->hp--;
     }
 }
