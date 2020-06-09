@@ -1,7 +1,7 @@
 #include "storage.h"
 
 Storage::Storage() {
-    status = "wolne ";
+    status = "wolny ";
 }
 
 bool Storage::lock() {
@@ -12,5 +12,5 @@ bool Storage::lock() {
 
 void Storage::unlock() {
     mutex.unlock();
-    this->status = "wolne ";
+    this->status = "wolny ";
 }

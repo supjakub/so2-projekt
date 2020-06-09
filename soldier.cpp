@@ -27,6 +27,8 @@ void Soldier::fire() {
         this->progress = to_string(prog);
     }
     cannon->unlock();
+    this->status = "czeka       ";
+    this->progress = ".";
 }
 
 void Soldier::reload() {
@@ -54,6 +56,8 @@ void Soldier::reload() {
         this->progress = to_string(prog);
     }
     storage[storage_index]->unlock();
+    this->status = "czeka       ";
+    this->progress = ".";
 }
 
 void Soldier::shoot(vector<Soldier*> enemies){
@@ -63,5 +67,23 @@ void Soldier::shoot(vector<Soldier*> enemies){
     }
 }
 
-
+void Soldier::heal(Hospital* hospital) {
+    this->status = "czeka       ";
+    this->progress = ".";
+    int bed = hospital->lockBed();
+    this->status = "w szpitalu  ";
+    int time = rand() % (301) + 600;
+    int prog;
+    this->progress = "0";
+    for (int i = 0; i < 10; i++){
+        this_thread::sleep_for(std::chrono::milliseconds(time));
+        prog = stoi(progress);
+        prog++;
+        this->progress = to_string(prog);
+    }
+    hospital->unlockBed(bed);
+    this->hp = 5;
+    this->status = "czeka       ";
+    this->progress = ".";
+}
 

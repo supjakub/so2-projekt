@@ -2,6 +2,7 @@
 #include "storage.h"
 #include <thread>
 #include <vector>
+#include "hospital.h"
 using namespace std;
 
 class Soldier {
@@ -14,6 +15,7 @@ public:
     string progress;
     void shoot(vector<Soldier*> enemies);
     int hp;
+    void heal(Hospital* hospital);
 
 private:
     Cannon* cannon;

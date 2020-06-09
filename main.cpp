@@ -16,6 +16,7 @@ vector<Storage*> blue_storages;
 vector<Soldier*> red_soldiers;
 vector<Cannon*> red_cannons;
 vector<Storage*> red_storages;
+Hospital* hospital = new Hospital();
 
 void execute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> enemies)
 {
@@ -24,34 +25,39 @@ void execute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> enemies)
         if (soldier->hp > 0) {
             soldier->reload();
         }
+        else
+            soldier->heal(hospital);
         if (soldier->hp > 0) { 
-        soldier->fire();
-        soldier->shoot(enemies);
+            soldier->fire();
+            soldier->shoot(enemies);
         }
+        else
+            soldier->heal(hospital);
     }
 }
 
 void displayGUI() {
-    mvprintw(0,0,"Zolnierze niebiescy");
+    mvprintw(0,0,"Zolnierze");
     for (int i = 0; i < 15; i++) {
         move(i + 1, 0);
         printw(to_string(i + 1).c_str());
     }
-    mvprintw(17,0,"Magazyny niebieskie");
+    mvprintw(17,0,"Magazyny");
     for (int i = 0; i < 3; i++) {
         move(i + 18, 0);
         printw(to_string(i + 1).c_str());
     }
-    mvprintw(0,50,"Zolnierze czerwoni");
+    mvprintw(0,100,"Zolnierze");
     for (int i = 0; i < 15; i++) {
-        move(i + 1, 50);
+        move(i + 1, 100);
         printw(to_string(i + 1).c_str());
     }
-    mvprintw(17,50,"Magazyny czerwone");
+    mvprintw(17,100,"Magazyny");
     for (int i = 0; i < 3; i++) {
-        move(i + 18, 50);
+        move(i + 18, 100);
         printw(to_string(i + 1).c_str());
     }
+    mvprintw(17,50,"Szpital");
 }
 
 void display(atomic<bool> &displaying) {
@@ -67,11 +73,14 @@ void display(atomic<bool> &displaying) {
             mvprintw(i + 18,5,blue_storages[i]->status.c_str());
 
         for (int i = 0; i < 15; i++) {
-            mvprintw(i+1,55,red_soldiers[i]->status.c_str());
-            mvprintw(i+1,68,red_soldiers[i]->progress.c_str());
+            mvprintw(i+1,105,red_soldiers[i]->status.c_str());
+            mvprintw(i+1,118,red_soldiers[i]->progress.c_str());
+            mvprintw(i+1,120,to_string(red_soldiers[i]->hp).c_str());
         }
         for (int i = 0; i < 3; i++)
-            mvprintw(i + 18,55,red_storages[i]->status.c_str());
+            mvprintw(i + 18,105,red_storages[i]->status.c_str());
+        mvprintw(18,53,to_string(hospital->freeBeds).c_str());
+        mvprintw(18,55,"/15");
         refresh();
     }
     clear();
@@ -121,6 +130,6 @@ int main(){
     display_thread.join();
     endwin();
 
-        return 0;
+    return 0;
 
 }
