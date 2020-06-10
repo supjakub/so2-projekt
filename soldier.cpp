@@ -15,6 +15,8 @@ Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id) {
 
 
 void Soldier::fire() {
+    while (cannon->destroyed != 0) {
+    }
     cannon->lock();
     this->status = "strzela     ";
     int time = rand() % (301) + 300;
@@ -26,6 +28,7 @@ void Soldier::fire() {
         prog++;
         this->progress = to_string(prog);
     }
+    cannon->destroy();
     cannon->unlock();
     this->status = "czeka       ";
     this->progress = ".";

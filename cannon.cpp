@@ -1,7 +1,8 @@
 #include "cannon.h"
 
 Cannon::Cannon(){
-
+    this->destroyed = 0;
+    this->symbol = 'O';
 }
 
 void Cannon::lock(){
@@ -10,4 +11,17 @@ void Cannon::lock(){
 
 void Cannon::unlock(){
     mutex.unlock();
+}
+
+void Cannon::destroy() {
+    int luck = rand() % 101;
+    if (luck <= 30) {
+        this->destroyed = 2;
+        this->symbol = 'X';
+    }
+}
+
+void Cannon::repair() {
+    this->destroyed = 0;
+    this->symbol = 'O';
 }

@@ -1,3 +1,4 @@
+#pragma once
 #include "cannon.h"
 #include "storage.h"
 #include <thread>
@@ -16,8 +17,7 @@ public:
     void shoot(vector<Soldier*> enemies);
     int hp;
     void heal(Hospital* hospital);
-
-private:
     Cannon* cannon;
+private:
     vector<Storage*> storage;
 };
