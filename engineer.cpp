@@ -4,6 +4,7 @@ Engineer::Engineer() {
     this->status = "czeka   ";
     this->progress = ".";
     this->hp = 5;
+    this->dead = 0;
 }
 
 void Engineer::repair(Cannon* cannon) {
@@ -50,6 +51,7 @@ void Engineer::heal(Hospital* hospital) {
     }
     hospital->unlockBed(bed);
     this->hp = 5;
+    this->dead = 0;
     this->status = "czeka     ";
     this->progress = ".";
 }

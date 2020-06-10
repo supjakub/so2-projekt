@@ -19,6 +19,7 @@ public:
     int hp;
     void heal(Hospital* hospital);
     Cannon* cannon;
+    int dead;
 private:
     vector<Storage*> storage;
 };

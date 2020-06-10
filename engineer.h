@@ -13,4 +13,5 @@ public:
     std::string progress;
     int hp;
     void heal(Hospital* hospital);
+    int dead = 0;
 };

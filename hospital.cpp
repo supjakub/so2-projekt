@@ -1,7 +1,7 @@
 #include "hospital.h"
 
 Hospital::Hospital() {
-    this->freeBeds = 5;
+    this->freeBeds = 10;
 }
 
 int Hospital::lockBed() {

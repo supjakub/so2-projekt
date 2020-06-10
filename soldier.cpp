@@ -11,6 +11,7 @@ Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id) {
     this->id = id;
     this->progress = ".";
     this->hp = 5;
+    this->dead = 0;
 }
 
 
@@ -40,6 +41,8 @@ void Soldier::reload() {
     bool flag = false;
     int storage_index;
     do {
+        if (this->hp <= 0)
+            return;
         for (int i = 0; i < 3; i++) {
             if (this->storage[i]->lock()) {
                 flag = true;
@@ -87,6 +90,7 @@ void Soldier::heal(Hospital* hospital) {
     }
     hospital->unlockBed(bed);
     this->hp = 5;
+    this->dead = 0;
     this->status = "czeka       ";
     this->progress = ".";
 }
