@@ -63,11 +63,12 @@ void Soldier::reload() {
     this->progress = ".";
 }
 
-void Soldier::shoot(vector<Soldier*> enemies){
-    int hit = rand() % 15;
-    if (enemies[hit]->hp > 0) {
-        enemies[hit]->hp--;
-    }
+void Soldier::shoot(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers){
+    int hit = rand() % 18;
+    if (hit < 15 && enemySoldiers[hit]->hp > 0)
+        enemySoldiers[hit]->hp--;
+    if (hit >= 15 && enemyEngineers[hit - 15]->hp > 0)
+        enemyEngineers[hit - 15]->hp--;
 }
 
 void Soldier::heal(Hospital* hospital) {

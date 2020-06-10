@@ -4,6 +4,7 @@
 #include <thread>
 #include <vector>
 #include "hospital.h"
+#include "engineer.h"
 using namespace std;
 
 class Soldier {
@@ -14,7 +15,7 @@ public:
     int id;
     string status;
     string progress;
-    void shoot(vector<Soldier*> enemies);
+    void shoot(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers);
     int hp;
     void heal(Hospital* hospital);
     Cannon* cannon;

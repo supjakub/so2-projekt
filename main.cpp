@@ -19,7 +19,7 @@ Hospital* hospital = new Hospital();
 vector<Engineer*> blue_engineers;
 vector<Engineer*> red_engineers;
 
-void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> enemies)
+void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers)
 {
     while(running)
     {
@@ -30,7 +30,7 @@ void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> en
             soldier->heal(hospital);
         if (soldier->hp > 0) { 
             soldier->fire();
-            soldier->shoot(enemies);
+            soldier->shoot(enemySoldiers, enemyEngineers);
         }
         else
             soldier->heal(hospital);
@@ -39,7 +39,10 @@ void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> en
 
 void engineerExecute(Engineer* engineer, atomic<bool>& running, vector<Cannon*> cannons) {
     while (running) {
-        engineer->inspect(cannons);
+        if (engineer->hp > 0)
+            engineer->inspect(cannons);
+        else
+            engineer->heal(hospital);
     }
 }
 
@@ -92,6 +95,7 @@ void display(atomic<bool> &displaying) {
         for (int i = 0; i < 3; i++) {
             mvprintw(i+18,20,blue_engineers[i]->status.c_str());
             mvprintw(i+18,32,blue_engineers[i]->progress.c_str());
+            mvprintw(i+18,34,to_string(blue_engineers[i]->hp).c_str());
         }
 
         for (int i = 0; i < 15; i++) {
@@ -105,6 +109,7 @@ void display(atomic<bool> &displaying) {
         for (int i = 0; i < 3; i++) {
             mvprintw(i+18,87,red_engineers[i]->status.c_str());
             mvprintw(i+18,97,red_engineers[i]->progress.c_str());
+            mvprintw(i+18,99,to_string(red_engineers[i]->hp).c_str());
         }
         mvprintw(18,53,to_string(hospital->freeBeds).c_str());
         mvprintw(18,54,"/5");
@@ -138,9 +143,9 @@ int main(){
     atomic<bool> running{true};
 
     for (int i = 0; i < 15; i++)
-        soldier_threads[i] = thread(soldierExecute, blue_soldiers[i], ref(running), red_soldiers);
+        soldier_threads[i] = thread(soldierExecute, blue_soldiers[i], ref(running), red_soldiers, red_engineers);
     for (int i = 15, j = 0; i < 30; i++, j++)
-        soldier_threads[i] = thread(soldierExecute, red_soldiers[j], ref(running), blue_soldiers);
+        soldier_threads[i] = thread(soldierExecute, red_soldiers[j], ref(running), blue_soldiers, blue_engineers);
     for (int i = 0; i < 3; i++)
         engineer_threads[i] = thread(engineerExecute, blue_engineers[i], ref(running), blue_cannons);
     for (int i = 3, j = 0; i < 6; i++, j++)
@@ -167,5 +172,4 @@ int main(){
     endwin();
 
     return 0;
-
 }
