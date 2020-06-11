@@ -10,6 +10,7 @@ public:
     std::string symbol;
     void destroy();
     void repair();
+    std::string engineer;
 private:
     std::mutex mutex;
 };

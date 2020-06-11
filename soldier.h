@@ -15,12 +15,12 @@ public:
     int id;
     string status;
     string progress;
-    // void shoot(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers);
     int hp;
     void heal(Hospital* hospital);
     Cannon* cannon;
     int dead;
     string target;
+    string medic;
 private:
     vector<Storage*> storage;
 };

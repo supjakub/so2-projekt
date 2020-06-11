@@ -6,7 +6,7 @@
 #include "hospital.h"
 class Engineer {
 public:
-    Engineer();
+    Engineer(int n);
     void repair(Cannon* cannon);
     void inspect(std::vector<Cannon*> cannons);
     std::string status;
@@ -14,4 +14,6 @@ public:
     int hp;
     void heal(Hospital* hospital);
     int dead = 0;
+    int id;
+    std::string medic;
 };

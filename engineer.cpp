@@ -1,10 +1,12 @@
 #include "engineer.h"
 
-Engineer::Engineer() {
+Engineer::Engineer(int n) {
     this->status = "czeka   ";
     this->progress = ".";
     this->hp = 5;
     this->dead = 0;
+    this->id = n;
+    this->medic = " ";
 }
 
 void Engineer::repair(Cannon* cannon) {
@@ -29,8 +31,11 @@ void Engineer::repair(Cannon* cannon) {
 void Engineer::inspect(std::vector<Cannon*> cannons) {
     if (this->hp > 0) {
         for (int i = 0; i < 15; i++) {
-            if (cannons[i]->destroyed == 2)
+            if (cannons[i]->destroyed == 2) {
+                cannons[i]->engineer = std::to_string(this->id);
                 this->repair(cannons[i]);
+                cannons[i]->engineer = " ";
+            }
         }
     }
 }
