@@ -67,6 +67,9 @@ void medicExecute(Medic* medic, atomic<bool>& running, vector<Soldier*> soldiers
 
 void displayGUI() {
     mvprintw(0,0,"Zolnierze");
+    mvprintw(0,16,"P");
+    mvprintw(0,18,"H");
+    mvprintw(0,20,"D");
     for (int i = 0; i < 15; i++) {
         move(i + 1, 0);
         printw(to_string(i + 1).c_str());
@@ -82,14 +85,18 @@ void displayGUI() {
         printw(to_string(i + 1).c_str());
     }
     mvprintw(22,0,"Medyk");
-    mvprintw(0,100,"Zolnierze");
+
+    mvprintw(0,111,"Zolnierze");
+    mvprintw(0,104,"P");
+    mvprintw(0,102,"H");
+    mvprintw(0,100,"D");
     for (int i = 0; i < 15; i++) {
-        move(i + 1, 100);
+        move(i + 1, 120);
         printw(to_string(i + 1).c_str());
     }
-    mvprintw(17,100,"Magazyny");
+    mvprintw(17,105,"Magazyny");
     for (int i = 0; i < 3; i++) {
-        move(i + 18, 100);
+        move(i + 18, 105);
         printw(to_string(i + 1).c_str());
     }
     mvprintw(17,85,"Inzynierzy");
@@ -99,6 +106,13 @@ void displayGUI() {
     }
     mvprintw(22,85,"Medyk");
     mvprintw(17,50,"Szpital");
+
+    mvprintw(0,40,"Legenda:");
+    mvprintw(1,40,"P - progres");
+    mvprintw(2,40,"H - punkty zycia HP");
+    mvprintw(3,40,"D - dzialo");
+    mvprintw(4,40,"(O - dzialajace)");
+    mvprintw(5,40,"(X - zepsute)");
 }
 
 void display(atomic<bool> &displaying) {
@@ -106,29 +120,29 @@ void display(atomic<bool> &displaying) {
     while(displaying) {
         usleep(100);
         for (int i = 0; i < 15; i++) {
-            mvprintw(i+1,5,blue_soldiers[i]->status.c_str());
-            mvprintw(i+1,18,blue_soldiers[i]->progress.c_str());
-            mvprintw(i+1,20,to_string(blue_soldiers[i]->hp).c_str());
-            mvprintw(i+1,23,blue_soldiers[i]->cannon->symbol.c_str());
+            mvprintw(i+1,3,blue_soldiers[i]->status.c_str());
+            mvprintw(i+1,16,blue_soldiers[i]->progress.c_str());
+            mvprintw(i+1,18,to_string(blue_soldiers[i]->hp).c_str());
+            mvprintw(i+1,20,blue_soldiers[i]->cannon->symbol.c_str());
         }
         for (int i = 0; i < 3; i++)
-            mvprintw(i + 18,5,blue_storages[i]->status.c_str());
+            mvprintw(i + 18,3,blue_storages[i]->status.c_str());
         for (int i = 0; i < 3; i++) {
-            mvprintw(i+18,20,blue_engineers[i]->status.c_str());
-            mvprintw(i+18,32,blue_engineers[i]->progress.c_str());
-            mvprintw(i+18,34,to_string(blue_engineers[i]->hp).c_str());
+            mvprintw(i+18,17,blue_engineers[i]->status.c_str());
+            mvprintw(i+18,26,blue_engineers[i]->progress.c_str());
+            mvprintw(i+18,28,to_string(blue_engineers[i]->hp).c_str());
         }
         mvprintw(22,7,blue_medic->status.c_str());
         mvprintw(22,14,blue_medic->progress.c_str());
 
         for (int i = 0; i < 15; i++) {
-            mvprintw(i+1,105,red_soldiers[i]->status.c_str());
-            mvprintw(i+1,118,red_soldiers[i]->progress.c_str());
-            mvprintw(i+1,120,to_string(red_soldiers[i]->hp).c_str());
-            mvprintw(i+1,95,red_soldiers[i]->cannon->symbol.c_str());
+            mvprintw(i+1,106,red_soldiers[i]->status.c_str());
+            mvprintw(i+1,104,red_soldiers[i]->progress.c_str());
+            mvprintw(i+1,102,to_string(red_soldiers[i]->hp).c_str());
+            mvprintw(i+1,100,red_soldiers[i]->cannon->symbol.c_str());
         }
         for (int i = 0; i < 3; i++)
-            mvprintw(i + 18,105,red_storages[i]->status.c_str());
+            mvprintw(i + 18,107,red_storages[i]->status.c_str());
         for (int i = 0; i < 3; i++) {
             mvprintw(i+18,87,red_engineers[i]->status.c_str());
             mvprintw(i+18,97,red_engineers[i]->progress.c_str());
@@ -136,8 +150,8 @@ void display(atomic<bool> &displaying) {
         }
         mvprintw(22,92,red_medic->status.c_str());
         mvprintw(22,100,red_medic->progress.c_str());
-        mvprintw(18,53,to_string(hospital->freeBeds).c_str());
-        mvprintw(18,55,"/10");
+        mvprintw(18,52,to_string(hospital->freeBeds).c_str());
+        mvprintw(18,53,"/9");
         refresh();
     }
     clear();

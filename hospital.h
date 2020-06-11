@@ -5,7 +5,7 @@
 class Hospital {
 public:
     Hospital();
-    std::mutex beds [10];
+    std::mutex beds [9];
     int lockBed();
     void unlockBed(int n);
     int freeBeds;
