@@ -31,8 +31,8 @@ void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> en
                 soldier->dead = 1;
                 break;
             }
-            soldier->fire();
-            soldier->shoot(enemySoldiers, enemyEngineers);
+            soldier->fire(enemySoldiers, enemyEngineers);
+            // soldier->shoot(enemySoldiers, enemyEngineers);
             if (soldier->hp <= 0) {
                 soldier->status = "ranny       ";
                 soldier->dead = 1;
@@ -70,6 +70,7 @@ void displayGUI() {
     mvprintw(0,16,"P");
     mvprintw(0,18,"H");
     mvprintw(0,20,"D");
+    mvprintw(0,22,"T");
     for (int i = 0; i < 15; i++) {
         move(i + 1, 0);
         printw(to_string(i + 1).c_str());
@@ -90,6 +91,7 @@ void displayGUI() {
     mvprintw(0,104,"P");
     mvprintw(0,102,"H");
     mvprintw(0,100,"D");
+    mvprintw(0,97,"T");
     for (int i = 0; i < 15; i++) {
         move(i + 1, 120);
         printw(to_string(i + 1).c_str());
@@ -124,6 +126,7 @@ void display(atomic<bool> &displaying) {
             mvprintw(i+1,16,blue_soldiers[i]->progress.c_str());
             mvprintw(i+1,18,to_string(blue_soldiers[i]->hp).c_str());
             mvprintw(i+1,20,blue_soldiers[i]->cannon->symbol.c_str());
+            mvprintw(i+1,22,blue_soldiers[i]->target.c_str());
         }
         for (int i = 0; i < 3; i++)
             mvprintw(i + 18,3,blue_storages[i]->status.c_str());
@@ -140,6 +143,7 @@ void display(atomic<bool> &displaying) {
             mvprintw(i+1,104,red_soldiers[i]->progress.c_str());
             mvprintw(i+1,102,to_string(red_soldiers[i]->hp).c_str());
             mvprintw(i+1,100,red_soldiers[i]->cannon->symbol.c_str());
+            mvprintw(i+1,97,red_soldiers[i]->target.c_str());
         }
         for (int i = 0; i < 3; i++)
             mvprintw(i + 18,107,red_storages[i]->status.c_str());
