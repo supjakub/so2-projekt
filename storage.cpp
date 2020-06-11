@@ -2,11 +2,12 @@
 
 Storage::Storage() {
     status = "wolny ";
+    soldier = " ";
 }
 
 bool Storage::lock() {
     if (mutex.try_lock()) {
-        this->status = "zajety";
+        this->status = "zajety przez";
     }
 }
 

@@ -53,6 +53,7 @@ void Soldier::reload() {
             return;
         for (int i = 0; i < 3; i++) {
             if (this->storage[i]->lock()) {
+                storage[i]->soldier = to_string(this->id + 1).append(" ");
                 flag = true;
                 storage_index = i;
                 break;
