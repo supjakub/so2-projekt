@@ -1,10 +1,12 @@
 #pragma once
-#include "cannon.h"
 #include <string>
 #include <thread>
 #include <vector>
-#include "hospital.h"
 #include <mutex>
+#include "hospital.h"
+#include "cannon.h"
+using namespace std;
+
 class Engineer {
 public:
     Engineer(int n);

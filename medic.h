@@ -1,6 +1,13 @@
 #pragma once
 #include "soldier.h"
 #include "engineer.h"
+#include <condition_variable>
+#include <mutex>
+#include <vector>
+using namespace std;
+
+class Soldier;
+
 class Medic {
 public:
     Medic();
@@ -9,4 +16,6 @@ public:
     void helpEngineer(Engineer* engineer);
     std::string status;
     std::string progress;
+    std::vector<int> queue;
+    std::mutex mtx;
 };

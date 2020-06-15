@@ -1,15 +1,21 @@
 #pragma once
+#include <thread>
+#include <iostream>
+#include <time.h>
+#include <stdlib.h>
+#include <vector>
+
 #include "cannon.h"
 #include "storage.h"
-#include <thread>
-#include <vector>
 #include "hospital.h"
 #include "engineer.h"
 using namespace std;
 
+class Medic;
+
 class Soldier {
 public:
-    Soldier(Cannon* cannon, vector<Storage*> storage, int id);
+    Soldier(Cannon* cannon, vector<Storage*> storage, int id, Medic* enemyMedic);
     void fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers);
     void reload();
     int id;
@@ -22,6 +28,7 @@ public:
     string target;
     string medic;
     mutex mtx;
+    Medic* enemyMedic;
 private:
     vector<Storage*> storage;
 };

@@ -1,4 +1,5 @@
 #include "engineer.h"
+using namespace std;
 
 Engineer::Engineer(int n) {
     this->status = "czeka   ";

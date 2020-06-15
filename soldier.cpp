@@ -1,11 +1,7 @@
 #include "soldier.h"
-#include <thread>
-#include <iostream>
-#include <time.h>
-#include <stdlib.h>
 using namespace std;
 
-Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id) {
+Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id, Medic* enemyMedic) {
     this->cannon = cannon;
     this->storage = storage;
     this->id = id;
@@ -14,6 +10,7 @@ Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id) {
     this->dead = 0;
     this->target = "  ";
     this->medic = " ";
+    this->enemyMedic = enemyMedic;
 }
 
 
@@ -28,7 +25,7 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
     int hit = rand() % 18;
     this->target = to_string(hit + 1);
     for (int i = 0; i < 10; i++) {
-        this_thread::sleep_for(std::chrono::milliseconds(time));
+        this_thread::sleep_for(chrono::milliseconds(time));
         prog = stoi(progress);
         prog++;
         if (prog > 9) {
@@ -89,7 +86,7 @@ void Soldier::reload() {
     int prog;
     this->progress = "0";
     for (int i = 0; i < 10; i++){
-        this_thread::sleep_for(std::chrono::milliseconds(time));
+        this_thread::sleep_for(chrono::milliseconds(time));
         prog = stoi(progress);
         prog++;
         this->progress = to_string(prog);
@@ -108,7 +105,7 @@ void Soldier::heal(Hospital* hospital) {
     int prog;
     this->progress = "0";
     for (int i = 0; i < 10; i++){
-        this_thread::sleep_for(std::chrono::milliseconds(time));
+        this_thread::sleep_for(chrono::milliseconds(time));
         prog = stoi(progress);
         prog++;
         this->progress = to_string(prog);

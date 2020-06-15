@@ -1,4 +1,5 @@
 #include "cannon.h"
+using namespace std;
 
 Cannon::Cannon(){
     this->destroyed = 0;

@@ -202,9 +202,9 @@ int main(){
 
     for (int i = 0; i < 15; i++) {
         blue_cannons.push_back(new Cannon());
-        blue_soldiers.push_back(new Soldier(blue_cannons[i], blue_storages, i));
+        blue_soldiers.push_back(new Soldier(blue_cannons[i], blue_storages, i, red_medic));
         red_cannons.push_back(new Cannon());
-        red_soldiers.push_back(new Soldier(red_cannons[i], red_storages, i));
+        red_soldiers.push_back(new Soldier(red_cannons[i], red_storages, i, blue_medic));
     }
 
 
