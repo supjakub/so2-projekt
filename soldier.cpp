@@ -33,10 +33,30 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
         prog++;
         this->progress = to_string(prog);
     }
-    if (hit < 15 && enemySoldiers[hit]->hp > 0)
-        enemySoldiers[hit]->hp--;
-    if (hit >= 15 && enemyEngineers[hit - 15]->hp > 0)
-        enemyEngineers[hit - 15]->hp--;
+    if (hit < 15 && enemySoldiers[hit]->dead == 0) {
+        enemySoldiers[hit]->mtx.lock();
+        if (enemySoldiers[hit]->hp > 0) {
+            enemySoldiers[hit]->hp--;
+            if (enemySoldiers[hit]->hp <= 0) {
+                enemySoldiers[hit]->dead = 1;
+                enemySoldiers[hit]->status = "ranny       ";
+            }
+        }
+        enemySoldiers[hit]->mtx.unlock();
+    }
+
+    if (hit >= 15 && enemyEngineers[hit-15]->dead == 0) {
+        enemyEngineers[hit-15]->mtx.lock();
+        if (enemyEngineers[hit-15]->hp > 0) {
+            enemyEngineers[hit-15]->hp--;
+            if (enemyEngineers[hit-15]->hp <= 0) {
+                enemyEngineers[hit-15]->dead = 1;
+                enemyEngineers[hit-15]->status = "ranny   ";
+            }
+        }
+        enemyEngineers[hit-15]->mtx.unlock();
+    }
+
     cannon->destroy();
     cannon->unlock();
     this->status = "czeka       ";

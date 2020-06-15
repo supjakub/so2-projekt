@@ -26,15 +26,11 @@ void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> en
     while(running) {
         while (soldier->dead == 0) {
             soldier->reload();
-            if (soldier->hp <= 0) {
-                soldier->status = "ranny       ";
-                soldier->dead = 1;
+            if (soldier->dead != 0) {
                 break;
             }
             soldier->fire(enemySoldiers, enemyEngineers);
-            if (soldier->hp <= 0) {
-                soldier->status = "ranny       ";
-                soldier->dead = 1;
+            if (soldier->dead != 0) {
                 break;
             }
         }

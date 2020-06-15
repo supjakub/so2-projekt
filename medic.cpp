@@ -17,6 +17,7 @@ void Medic::inspect(vector<Soldier*> soldiers, vector<Engineer*> engineers) {
 }
 
 void Medic::helpSoldier(Soldier* soldier) {
+    soldier->mtx.lock();
     soldier->dead = 2;
     soldier->medic = "M";
     this->status = "pomaga";
@@ -31,11 +32,13 @@ void Medic::helpSoldier(Soldier* soldier) {
     }
     soldier->dead = 3;
     soldier->medic = " ";
+    soldier->mtx.unlock();
     this->status = "czeka ";
     this->progress = ".";
 }
 
 void Medic::helpEngineer(Engineer* engineer) {
+    engineer->mtx.lock();
     engineer->dead = 2;
     engineer->medic = "M";
     this->status = "pomaga";
@@ -50,6 +53,7 @@ void Medic::helpEngineer(Engineer* engineer) {
     }
     engineer->dead = 3;
     engineer->medic = " ";
+    engineer->mtx.unlock();
     this->status = "czeka ";
     this->progress = ".";
 }

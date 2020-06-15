@@ -4,6 +4,7 @@
 #include <thread>
 #include <vector>
 #include "hospital.h"
+#include <mutex>
 class Engineer {
 public:
     Engineer(int n);
@@ -16,4 +17,5 @@ public:
     int dead = 0;
     int id;
     std::string medic;
+    std::mutex mtx;
 };

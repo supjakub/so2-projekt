@@ -21,6 +21,7 @@ public:
     int dead;
     string target;
     string medic;
+    mutex mtx;
 private:
     vector<Storage*> storage;
 };
