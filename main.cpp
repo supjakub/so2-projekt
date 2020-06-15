@@ -24,33 +24,51 @@ Medic* red_medic = new Medic;
 void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers)
 {
     while(running) {
+        soldier->mtx.lock();
         while (soldier->dead == 0) {
+            soldier->mtx.unlock();
             soldier->reload();
+            soldier->mtx.lock();
             if (soldier->dead != 0) {
+                soldier->mtx.unlock();
                 break;
             }
+            soldier->mtx.unlock();
             soldier->fire(enemySoldiers, enemyEngineers);
+            soldier->mtx.lock();
             if (soldier->dead != 0) {
+                soldier->mtx.unlock();
                 break;
             }
+            soldier->mtx.unlock();
         }
+        soldier->mtx.unlock();
+        soldier->mtx.lock();
         if (soldier->dead == 3)
+        soldier->mtx.unlock();
             soldier->heal(hospital);
     }
 }
 
 void engineerExecute(Engineer* engineer, atomic<bool>& running, vector<Cannon*> cannons) {
     while(running) {
+        engineer->mtx.lock();
         while (engineer->dead == 0) {
+            engineer->mtx.unlock();
             engineer->inspect(cannons);
+            engineer->mtx.lock();
             if (engineer->hp <= 0) {
-                engineer->status = "ranny   ";
-                engineer->dead = 1;
+                engineer->mtx.unlock();
                 break;
             }
+            engineer->mtx.unlock();
         }
-        if (engineer->dead == 3)
+        engineer->mtx.lock();
+        if (engineer->dead == 3){
+            engineer->mtx.unlock();
             engineer->heal(hospital);
+        }
+        engineer->mtx.unlock();
     }
 }
 

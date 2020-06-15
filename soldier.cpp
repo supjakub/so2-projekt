@@ -31,6 +31,9 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
         this_thread::sleep_for(std::chrono::milliseconds(time));
         prog = stoi(progress);
         prog++;
+        if (prog > 9) {
+            prog = 9;
+        }
         this->progress = to_string(prog);
     }
     if (hit < 15 && enemySoldiers[hit]->dead == 0) {
