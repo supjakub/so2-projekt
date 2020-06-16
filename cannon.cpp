@@ -8,14 +8,6 @@ Cannon::Cannon(){
     this->loaded = false;
 }
 
-// void Cannon::lock(){
-//     mutex.lock();
-// }
-
-// void Cannon::unlock(){
-//     mutex.unlock();
-// }
-
 void Cannon::destroy() {
     int luck = rand() % 101;
     if (luck <= 30) {

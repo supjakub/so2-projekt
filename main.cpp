@@ -23,66 +23,32 @@ Medic* red_medic = new Medic;
 
 void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers) {
     while(running) {
-        lock(soldier->mtx, soldier->cannon->mutex);
         if (soldier->dead == 0 && soldier->cannon->loaded == false) {
-            soldier->mtx.unlock();
-            soldier->cannon->mutex.unlock();
             soldier->reload();
         }
-        else {
-            soldier->mtx.unlock();
-            soldier->cannon->mutex.unlock();
-        }
-        lock(soldier->mtx, soldier->cannon->mutex);
         if (soldier->dead == 0 && soldier->cannon->loaded == true) {
-            soldier->mtx.unlock();
-            soldier->cannon->mutex.unlock();
             soldier->fire(enemySoldiers, enemyEngineers);
         }
-        else {
-            soldier->mtx.unlock();
-            soldier->cannon->mutex.unlock();
-        }
-        soldier->mtx.lock();
         if (soldier->dead == 1) {
-            soldier->mtx.unlock();
             soldier->callForHelp();
         }
-        else
-            soldier->mtx.unlock();
-        soldier->mtx.lock();
         if (soldier->dead == 3) {
-            soldier->mtx.unlock();
             soldier->heal(hospital);
         }
-        else
-            soldier->mtx.unlock();
     }
 }
 
 void engineerExecute(Engineer* engineer, atomic<bool>& running, vector<Cannon*> cannons) {
     while(running) {
-        engineer->mtx.lock();
         if (engineer->dead == 0) {
-            engineer->mtx.unlock();
             engineer->inspect(cannons);
         }
-        else
-            engineer->mtx.unlock();
-        engineer->mtx.lock();
         if (engineer->dead == 1) {
-            engineer->mtx.unlock();
             engineer->callForHelp();
         }
-        else
-            engineer->mtx.unlock();
-        engineer->mtx.lock();
         if (engineer->dead == 3) {
-            engineer->mtx.unlock();
             engineer->heal(hospital);
         }
-        else
-            engineer->mtx.unlock();
     }
 }
 
