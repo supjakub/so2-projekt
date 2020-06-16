@@ -65,7 +65,7 @@ void Engineer::heal(Hospital* hospital) {
 
 void Engineer::callForHelp() {
     lock_guard<mutex> lck(friendlyMedic->mtx);
-    friendlyMedic->queue.push_back(id);
+    friendlyMedic->queue.push_back(id + 15);
     friendlyMedic->mtx.unlock();
     friendlyMedic->var.notify_one();
 }
