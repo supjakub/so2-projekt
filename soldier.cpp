@@ -18,7 +18,9 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
     while (cannon->destroyed != 0) {
     }
     cannon->mutex.lock();
+    this->mtx.lock();
     this->status = "strzela     ";
+    this->mtx.unlock();
     int hit = rand() % 18;
     this->target = to_string(hit + 1);
     int time = rand() % (301) + 300;
@@ -60,20 +62,27 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
     cannon->destroy();
     cannon->loaded = false;
     cannon->mutex.unlock();
+    this->mtx.lock();
     this->status = "czeka       ";
+    this->mtx.unlock();
     this->progress = ".";
     this->target = "  ";
 }
 
 void Soldier::reload() {
+    this->mtx.lock();
     this->status = "czeka       ";
+    this->mtx.unlock();
     this->progress = ".";
     bool flag = false;
     int storage_index;
     do {
+        this->mtx.lock();
         if (this->dead != 0) {
+            this->mtx.unlock();
             return;
         }
+        this->mtx.unlock();
         for (int i = 0; i < 3; i++) {
             if (this->storage[i]->mutex.try_lock()) {
                 storage[i]->status = "zajety przez";
@@ -84,7 +93,9 @@ void Soldier::reload() {
             }
         }
     } while (!flag);
+    this->mtx.lock();
     this->status = "przeladowuje";
+    this->mtx.unlock();
     int time = rand() % (301) + 300;
     int prog;
     this->progress = "0";
@@ -102,10 +113,14 @@ void Soldier::reload() {
 }
 
 void Soldier::heal(Hospital* hospital) {
+    this->mtx.lock();
     this->status = "czeka       ";
+    this->mtx.unlock();
     this->progress = ".";
     int bed = hospital->lockBed();
+    this->mtx.lock();
     this->status = "w szpitalu  ";
+    this->mtx.unlock();
     int time = rand() % (301) + 600;
     int prog;
     this->progress = "0";
@@ -116,9 +131,11 @@ void Soldier::heal(Hospital* hospital) {
         this->progress = to_string(prog);
     }
     hospital->unlockBed(bed);
+    this->mtx.lock();
     this->hp = 5;
     this->dead = 0;
     this->status = "czeka       ";
+    this->mtx.unlock();
     this->progress = ".";
 }
 

@@ -17,7 +17,9 @@ void Medic::inspect(vector<Soldier*> soldiers, vector<Engineer*> engineers) {
 }
 
 void Medic::helpSoldier(Soldier* soldier) {
+    soldier->mtx.lock();
     soldier->dead = 2;
+    soldier->mtx.unlock();
     soldier->medic = "M";
     this->status = "pomaga";
     int time = rand() % (301) + 600;
@@ -29,7 +31,9 @@ void Medic::helpSoldier(Soldier* soldier) {
         prog++;
         this->progress = to_string(prog);
     }
+    soldier->mtx.lock();
     soldier->dead = 3;
+    soldier->mtx.unlock();
     soldier->medic = " ";
     this->status = "czeka ";
     this->progress = ".";
