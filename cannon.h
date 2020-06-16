@@ -11,6 +11,5 @@ public:
     void destroy();
     void repair();
     std::string engineer;
-private:
     std::mutex mutex;
 };

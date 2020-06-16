@@ -18,12 +18,14 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
     while (cannon->destroyed != 0) {
     }
     cannon->lock();
+    this->mtx.lock();
     this->status = "strzela     ";
+    this->mtx.unlock();
+    int hit = rand() % 18;
+    this->target = to_string(hit + 1);
     int time = rand() % (301) + 300;
     int prog;
     this->progress = "0";
-    int hit = rand() % 18;
-    this->target = to_string(hit + 1);
     for (int i = 0; i < 10; i++) {
         this_thread::sleep_for(chrono::milliseconds(time));
         prog = stoi(progress);
@@ -33,9 +35,9 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
         }
         this->progress = to_string(prog);
     }
-    if (hit < 15 && enemySoldiers[hit]->dead == 0) {
+    if (hit < 15) {
         enemySoldiers[hit]->mtx.lock();
-        if (enemySoldiers[hit]->hp > 0) {
+        if (enemySoldiers[hit]->hp > 0 && enemySoldiers[hit]->dead == 0) {
             enemySoldiers[hit]->hp--;
             if (enemySoldiers[hit]->hp <= 0) {
                 enemySoldiers[hit]->dead = 1;
@@ -45,9 +47,9 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
         enemySoldiers[hit]->mtx.unlock();
     }
 
-    if (hit >= 15 && enemyEngineers[hit-15]->dead == 0) {
+    if (hit >= 15 ) {
         enemyEngineers[hit-15]->mtx.lock();
-        if (enemyEngineers[hit-15]->hp > 0) {
+        if (enemyEngineers[hit-15]->hp > 0 && enemyEngineers[hit-15]->dead == 0) {
             enemyEngineers[hit-15]->hp--;
             if (enemyEngineers[hit-15]->hp <= 0) {
                 enemyEngineers[hit-15]->dead = 1;
@@ -59,19 +61,27 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
 
     cannon->destroy();
     cannon->unlock();
+    this->mtx.lock();
     this->status = "czeka       ";
+    this->mtx.unlock();
     this->progress = ".";
     this->target = "  ";
 }
 
 void Soldier::reload() {
+    this->mtx.lock();
     this->status = "czeka       ";
+    this->mtx.unlock();
     this->progress = ".";
     bool flag = false;
     int storage_index;
     do {
-        if (this->dead != 0)
+        this->mtx.lock();
+        if (this->dead != 0) {
+            this->mtx.unlock();
             return;
+        }
+        this->mtx.unlock();
         for (int i = 0; i < 3; i++) {
             if (this->storage[i]->mutex.try_lock()) {
                 storage[i]->status = "zajety przez";
@@ -82,7 +92,9 @@ void Soldier::reload() {
             }
         }
     } while (!flag);
+    this->mtx.lock();
     this->status = "przeladowuje";
+    this->mtx.unlock();
     int time = rand() % (301) + 300;
     int prog;
     this->progress = "0";
@@ -92,17 +104,23 @@ void Soldier::reload() {
         prog++;
         this->progress = to_string(prog);
     }
-    storage[storage_index]->mutex.unlock();
     storage[storage_index]->status = "wolny ";
+    storage[storage_index]->mutex.unlock();
+    this->mtx.lock();
     this->status = "czeka       ";
+    this->mtx.unlock();
     this->progress = ".";
 }
 
 void Soldier::heal(Hospital* hospital) {
+    this->mtx.lock();
     this->status = "czeka       ";
+    this->mtx.unlock();
     this->progress = ".";
     int bed = hospital->lockBed();
+    this->mtx.lock();
     this->status = "w szpitalu  ";
+    this->mtx.unlock();
     int time = rand() % (301) + 600;
     int prog;
     this->progress = "0";
@@ -113,9 +131,11 @@ void Soldier::heal(Hospital* hospital) {
         this->progress = to_string(prog);
     }
     hospital->unlockBed(bed);
+    this->mtx.lock();
     this->hp = 5;
     this->dead = 0;
     this->status = "czeka       ";
+    this->mtx.unlock();
     this->progress = ".";
 }
 
