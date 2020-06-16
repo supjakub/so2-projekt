@@ -41,6 +41,7 @@ void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> en
                 break;
             }
             soldier->mtx.unlock();
+            soldier->mtx.lock();
         }
         soldier->mtx.unlock();
         soldier->mtx.lock();
