@@ -1,13 +1,14 @@
 #include "engineer.h"
 using namespace std;
 
-Engineer::Engineer(int n) {
+Engineer::Engineer(int n, Medic* friendlyMedic) {
     this->status = "czeka   ";
     this->progress = ".";
     this->hp = 5;
     this->dead = 0;
     this->id = n;
     this->medic = " ";
+    this->friendlyMedic = friendlyMedic;
 }
 
 void Engineer::repair(Cannon* cannon) {
@@ -60,4 +61,11 @@ void Engineer::heal(Hospital* hospital) {
     this->dead = 0;
     this->status = "czeka     ";
     this->progress = ".";
+}
+
+void Engineer::callForHelp() {
+    lock_guard<mutex> lck(friendlyMedic->mtx);
+    friendlyMedic->queue.push_back(id);
+    friendlyMedic->mtx.unlock();
+    friendlyMedic->var.notify_one();
 }

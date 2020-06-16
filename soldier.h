@@ -15,9 +15,11 @@ using namespace std;
 
 class Medic;
 
+class Engineer;
+
 class Soldier {
 public:
-    Soldier(Cannon* cannon, vector<Storage*> storage, int id, Medic* enemyMedic);
+    Soldier(Cannon* cannon, vector<Storage*> storage, int id, Medic* friendlyMedic);
     void fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers);
     void reload();
     int id;
@@ -30,7 +32,8 @@ public:
     string target;
     string medic;
     mutex mtx;
-    Medic* enemyMedic;
+    Medic* friendlyMedic;
+    void callForHelp();
 private:
     vector<Storage*> storage;
 };

@@ -1,7 +1,7 @@
 #include "soldier.h"
 using namespace std;
 
-Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id, Medic* enemyMedic) {
+Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id, Medic* friendlyMedic) {
     this->cannon = cannon;
     this->storage = storage;
     this->id = id;
@@ -10,7 +10,7 @@ Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id, Medic* enemyM
     this->dead = 0;
     this->target = "  ";
     this->medic = " ";
-    this->enemyMedic = enemyMedic;
+    this->friendlyMedic = friendlyMedic;
 }
 
 
@@ -38,10 +38,6 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
         if (enemySoldiers[hit]->hp > 0) {
             enemySoldiers[hit]->hp--;
             if (enemySoldiers[hit]->hp <= 0) {
-                lock_guard<mutex> lck(enemyMedic->mtx);
-                enemyMedic->queue.push_back(hit);
-                enemyMedic->mtx.unlock();
-                enemyMedic->var.notify_one();
                 enemySoldiers[hit]->dead = 1;
                 enemySoldiers[hit]->status = "ranny       ";
             }
@@ -54,10 +50,6 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
         if (enemyEngineers[hit-15]->hp > 0) {
             enemyEngineers[hit-15]->hp--;
             if (enemyEngineers[hit-15]->hp <= 0) {
-                lock_guard<mutex> lck(enemyMedic->mtx);
-                enemyMedic->queue.push_back(hit);
-                enemyMedic->mtx.unlock();
-                enemyMedic->var.notify_one();
                 enemyEngineers[hit-15]->dead = 1;
                 enemyEngineers[hit-15]->status = "ranny   ";
             }
@@ -125,5 +117,12 @@ void Soldier::heal(Hospital* hospital) {
     this->dead = 0;
     this->status = "czeka       ";
     this->progress = ".";
+}
+
+void Soldier::callForHelp() {
+    lock_guard<mutex> lck(friendlyMedic->mtx);
+    friendlyMedic->queue.push_back(id);
+    friendlyMedic->mtx.unlock();
+    friendlyMedic->var.notify_one();
 }
 

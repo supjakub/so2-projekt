@@ -40,13 +40,17 @@ void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> en
                 soldier->mtx.unlock();
                 break;
             }
+            soldier->mtx.lock();
+        }
+        if (soldier->dead == 3) {
             soldier->mtx.unlock();
+            soldier->heal(hospital);
+        }
+        if (soldier->dead == 1) {
+            soldier->mtx.unlock();
+            soldier->callForHelp();
         }
         soldier->mtx.unlock();
-        soldier->mtx.lock();
-        if (soldier->dead == 3)
-        soldier->mtx.unlock();
-            soldier->heal(hospital);
     }
 }
 
@@ -57,12 +61,12 @@ void engineerExecute(Engineer* engineer, atomic<bool>& running, vector<Cannon*> 
             engineer->mtx.unlock();
             engineer->inspect(cannons);
             engineer->mtx.lock();
-            if (engineer->hp <= 0) {
+            if (engineer->dead == 0) {
                 engineer->mtx.unlock();
                 break;
             }
-            engineer->mtx.unlock();
         }
+        engineer->mtx.unlock();
         engineer->mtx.lock();
         if (engineer->dead == 3){
             engineer->mtx.unlock();
@@ -196,15 +200,15 @@ int main(){
     for (int i = 0; i < 3; i++) {
         blue_storages.push_back(new Storage());
         red_storages.push_back(new Storage());
-        blue_engineers.push_back(new Engineer(i + 1));
-        red_engineers.push_back(new Engineer(i + 1));      
+        blue_engineers.push_back(new Engineer(i + 1, blue_medic));
+        red_engineers.push_back(new Engineer(i + 1, red_medic));      
     }
 
     for (int i = 0; i < 15; i++) {
         blue_cannons.push_back(new Cannon());
-        blue_soldiers.push_back(new Soldier(blue_cannons[i], blue_storages, i, red_medic));
+        blue_soldiers.push_back(new Soldier(blue_cannons[i], blue_storages, i, blue_medic));
         red_cannons.push_back(new Cannon());
-        red_soldiers.push_back(new Soldier(red_cannons[i], red_storages, i, blue_medic));
+        red_soldiers.push_back(new Soldier(red_cannons[i], red_storages, i, red_medic));
     }
 
 

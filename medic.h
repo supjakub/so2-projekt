@@ -8,6 +8,8 @@ using namespace std;
 
 class Soldier;
 
+class Engineer;
+
 class Medic {
 public:
     Medic();
