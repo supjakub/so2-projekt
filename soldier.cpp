@@ -70,7 +70,7 @@ void Soldier::reload() {
     bool flag = false;
     int storage_index;
     do {
-        if (this->hp <= 0)
+        if (this->dead != 0)
             return;
         for (int i = 0; i < 3; i++) {
             if (this->storage[i]->mutex.try_lock()) {

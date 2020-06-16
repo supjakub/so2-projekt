@@ -72,6 +72,12 @@ void engineerExecute(Engineer* engineer, atomic<bool>& running, vector<Cannon*> 
             engineer->heal(hospital);
         }
         engineer->mtx.unlock();
+        engineer->mtx.lock();
+        if (engineer->dead == 1) {
+            engineer->mtx.unlock();
+            engineer->callForHelp();
+        }
+        engineer->mtx.unlock();
     }
 }
 

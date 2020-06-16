@@ -8,25 +8,23 @@ Medic::Medic() {
 void Medic::inspect(vector<Soldier*> soldiers, vector<Engineer*> engineers) {
    std::unique_lock<std::mutex>var_lock(mtx);
    var.wait(var_lock);
-   while(!queue.empty()) {
+   if(!queue.empty()) {
        int index = queue.back();
        queue.pop_back();
        if (index < 15) {
-           soldiers[index]->mtx.lock();
            helpSoldier(soldiers[index]);
-           soldiers[index]->mtx.unlock();
        }
        else {
-           engineers[index - 15]->mtx.lock();
            helpEngineer(engineers[index - 15]);
-           engineers[index - 15]->mtx.unlock();
        }
    }
 }
 
 void Medic::helpSoldier(Soldier* soldier) {
+    soldier->mtx.lock();
     soldier->dead = 2;
     soldier->medic = "M";
+    soldier->mtx.unlock();
     this->status = "pomaga";
     int time = rand() % (301) + 600;
     int prog;
@@ -37,15 +35,19 @@ void Medic::helpSoldier(Soldier* soldier) {
         prog++;
         this->progress = to_string(prog);
     }
+    soldier->mtx.lock();
     soldier->dead = 3;
     soldier->medic = " ";
+    soldier->mtx.unlock();
     this->status = "czeka ";
     this->progress = ".";
 }
 
 void Medic::helpEngineer(Engineer* engineer) {
+    engineer->mtx.lock();
     engineer->dead = 2;
     engineer->medic = "M";
+    engineer->mtx.unlock();
     this->status = "pomaga";
     int time = rand() % (301) + 600;
     int prog;
@@ -56,8 +58,10 @@ void Medic::helpEngineer(Engineer* engineer) {
         prog++;
         this->progress = to_string(prog);
     }
+    engineer->mtx.lock();
     engineer->dead = 3;
     engineer->medic = " ";
+    engineer->mtx.unlock();
     this->status = "czeka ";
     this->progress = ".";
 }
