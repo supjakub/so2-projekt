@@ -21,63 +21,68 @@ vector<Engineer*> red_engineers;
 Medic* blue_medic = new Medic();
 Medic* red_medic = new Medic;
 
-void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers)
-{
+void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers) {
     while(running) {
-        soldier->mtx.lock();
-        while (soldier->dead == 0) {
+        lock(soldier->mtx, soldier->cannon->mutex);
+        if (soldier->dead == 0 && soldier->cannon->loaded == false) {
             soldier->mtx.unlock();
+            soldier->cannon->unlock();
             soldier->reload();
-            soldier->mtx.lock();
-            if (soldier->dead != 0) {
-                soldier->mtx.unlock();
-                break;
-            }
+        }
+        else {
             soldier->mtx.unlock();
+            soldier->cannon->unlock();
+        }
+        lock(soldier->mtx, soldier->cannon->mutex);
+        if (soldier->dead == 0 && soldier->cannon->loaded == true) {
+            soldier->mtx.unlock();
+            soldier->cannon->unlock();
             soldier->fire(enemySoldiers, enemyEngineers);
-            soldier->mtx.lock();
-            if (soldier->dead != 0) {
-                soldier->mtx.unlock();
-                break;
-            }
         }
-        if (soldier->dead == 3) {
+        else {
             soldier->mtx.unlock();
-            soldier->heal(hospital);
+            soldier->cannon->unlock();
         }
+        soldier->mtx.lock();
         if (soldier->dead == 1) {
             soldier->mtx.unlock();
             soldier->callForHelp();
         }
-        soldier->mtx.unlock();
+        else
+            soldier->mtx.unlock();
+        soldier->mtx.lock();
+        if (soldier->dead == 3) {
+            soldier->mtx.unlock();
+            soldier->heal(hospital);
+        }
+        else
+            soldier->mtx.unlock();
     }
 }
 
 void engineerExecute(Engineer* engineer, atomic<bool>& running, vector<Cannon*> cannons) {
     while(running) {
         engineer->mtx.lock();
-        while (engineer->dead == 0) {
+        if (engineer->dead == 0) {
             engineer->mtx.unlock();
             engineer->inspect(cannons);
-            engineer->mtx.lock();
-            if (engineer->dead == 0) {
-                engineer->mtx.unlock();
-                break;
-            }
         }
-        engineer->mtx.unlock();
-        engineer->mtx.lock();
-        if (engineer->dead == 3){
+        else
             engineer->mtx.unlock();
-            engineer->heal(hospital);
-        }
-        engineer->mtx.unlock();
         engineer->mtx.lock();
         if (engineer->dead == 1) {
             engineer->mtx.unlock();
             engineer->callForHelp();
         }
-        engineer->mtx.unlock();
+        else
+            engineer->mtx.unlock();
+        engineer->mtx.lock();
+        if (engineer->dead == 3) {
+            engineer->mtx.unlock();
+            engineer->heal(hospital);
+        }
+        else
+            engineer->mtx.unlock();
     }
 }
 

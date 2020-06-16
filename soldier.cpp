@@ -60,6 +60,7 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
     }
 
     cannon->destroy();
+    cannon->loaded = false;
     cannon->unlock();
     this->mtx.lock();
     this->status = "czeka       ";
@@ -104,6 +105,7 @@ void Soldier::reload() {
         prog++;
         this->progress = to_string(prog);
     }
+    this->cannon->loaded = true;
     storage[storage_index]->status = "wolny ";
     storage[storage_index]->mutex.unlock();
     this->mtx.lock();

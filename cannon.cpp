@@ -5,6 +5,7 @@ Cannon::Cannon(){
     this->destroyed = 0;
     this->symbol = 'O';
     this->engineer = " ";
+    this->loaded = false;
 }
 
 void Cannon::lock(){

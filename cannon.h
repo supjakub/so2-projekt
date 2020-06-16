@@ -12,4 +12,5 @@ public:
     void repair();
     std::string engineer;
     std::mutex mutex;
+    bool loaded;
 };
