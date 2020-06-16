@@ -1,23 +1,27 @@
 #include "medic.h"
-
+using namespace std;
 Medic::Medic() {
     this->status = "czeka ";
     this->progress = ".";
 }
 
 void Medic::inspect(vector<Soldier*> soldiers, vector<Engineer*> engineers) {
-    for (int i = 0; i < 15; i++) {
-        soldiers[i]->mtx.lock();
-        if (soldiers[i]->dead == 1)
-            this->helpSoldier(soldiers[i]);
-        soldiers[i]->mtx.unlock();
-    }
-    for (int i = 0; i < 3; i++) {
-        engineers[i]->mtx.lock();
-        if (engineers[i]->dead == 1)
-            this->helpEngineer(engineers[i]);
-        engineers[i]->mtx.unlock();
-    }
+   std::unique_lock<std::mutex>var_lock(mtx);
+   var.wait(var_lock);
+   while(!queue.empty()) {
+       int index = queue.back();
+       queue.pop_back();
+       if (index < 15) {
+           soldiers[index]->mtx.lock();
+           helpSoldier(soldiers[index]);
+           soldiers[index]->mtx.unlock();
+       }
+       else {
+           engineers[index - 15]->mtx.lock();
+           helpEngineer(engineers[index - 15]);
+           engineers[index - 15]->mtx.unlock();
+       }
+   }
 }
 
 void Medic::helpSoldier(Soldier* soldier) {

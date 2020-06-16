@@ -4,11 +4,13 @@
 #include <time.h>
 #include <stdlib.h>
 #include <vector>
+#include <condition_variable>
 
 #include "cannon.h"
 #include "storage.h"
 #include "hospital.h"
 #include "engineer.h"
+#include "medic.h"
 using namespace std;
 
 class Medic;

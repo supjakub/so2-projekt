@@ -18,4 +18,5 @@ public:
     std::string progress;
     std::vector<int> queue;
     std::mutex mtx;
+    std::condition_variable var;
 };

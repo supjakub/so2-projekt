@@ -38,6 +38,10 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
         if (enemySoldiers[hit]->hp > 0) {
             enemySoldiers[hit]->hp--;
             if (enemySoldiers[hit]->hp <= 0) {
+                lock_guard<mutex> lck(enemyMedic->mtx);
+                enemyMedic->queue.push_back(hit);
+                enemyMedic->mtx.unlock();
+                enemyMedic->var.notify_one();
                 enemySoldiers[hit]->dead = 1;
                 enemySoldiers[hit]->status = "ranny       ";
             }
@@ -50,6 +54,10 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
         if (enemyEngineers[hit-15]->hp > 0) {
             enemyEngineers[hit-15]->hp--;
             if (enemyEngineers[hit-15]->hp <= 0) {
+                lock_guard<mutex> lck(enemyMedic->mtx);
+                enemyMedic->queue.push_back(hit);
+                enemyMedic->mtx.unlock();
+                enemyMedic->var.notify_one();
                 enemyEngineers[hit-15]->dead = 1;
                 enemyEngineers[hit-15]->status = "ranny   ";
             }
