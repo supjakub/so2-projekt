@@ -57,7 +57,7 @@ void engineerExecute(Engineer* engineer, atomic<bool>& running, vector<Cannon*> 
             engineer->mtx.unlock();
             engineer->inspect(cannons);
             engineer->mtx.lock();
-            if (engineer->hp <= 0) {
+            if (engineer->hp != 0) {
                 engineer->mtx.unlock();
                 break;
             }
