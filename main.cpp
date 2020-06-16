@@ -131,9 +131,9 @@ void displayGUI() {
         move(i + 18, 105);
         printw(to_string(i + 1).c_str());
     }
-    mvprintw(17,85,"Inzynierzy");
+    mvprintw(17,83,"Inzynierzy");
     for (int i = 0; i < 3; i++) {
-        move(i + 18, 85);
+        move(i + 18, 83);
         printw(to_string(i + 1).c_str());
     }
     mvprintw(22,85,"Medyk");
@@ -169,9 +169,9 @@ void display(atomic<bool> &displaying) {
         }
         for (int i = 0; i < 3; i++) {
             mvprintw(i+18,23,blue_engineers[i]->status.c_str());
-            mvprintw(i+18,32,blue_engineers[i]->progress.c_str());
-            mvprintw(i+18,34,to_string(blue_engineers[i]->hp).c_str());
-            mvprintw(i+18,36,blue_engineers[i]->medic.c_str());
+            mvprintw(i+18,34,blue_engineers[i]->progress.c_str());
+            mvprintw(i+18,36,to_string(blue_engineers[i]->hp).c_str());
+            mvprintw(i+18,38,blue_engineers[i]->medic.c_str());
         }
         mvprintw(22,7,blue_medic->status.c_str());
         mvprintw(22,14,blue_medic->progress.c_str());
@@ -190,7 +190,7 @@ void display(atomic<bool> &displaying) {
             mvprintw(i+18,120,red_storages[i]->soldier.c_str());
         }
         for (int i = 0; i < 3; i++) {
-            mvprintw(i+18,87,red_engineers[i]->status.c_str());
+            mvprintw(i+18,85,red_engineers[i]->status.c_str());
             mvprintw(i+18,97,red_engineers[i]->progress.c_str());
             mvprintw(i+18,99,to_string(red_engineers[i]->hp).c_str());
             mvprintw(i+18,101,red_engineers[i]->medic.c_str());
