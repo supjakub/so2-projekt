@@ -81,7 +81,8 @@ void Soldier::reload() {
         if (this->hp <= 0)
             return;
         for (int i = 0; i < 3; i++) {
-            if (this->storage[i]->lock()) {
+            if (this->storage[i]->mutex.try_lock()) {
+                storage[i]->status = "zajety przez";
                 storage[i]->soldier = to_string(this->id + 1).append(" ");
                 flag = true;
                 storage_index = i;
@@ -99,7 +100,8 @@ void Soldier::reload() {
         prog++;
         this->progress = to_string(prog);
     }
-    storage[storage_index]->unlock();
+    storage[storage_index]->mutex.unlock();
+    storage[storage_index]->status = "wolny ";
     this->status = "czeka       ";
     this->progress = ".";
 }
