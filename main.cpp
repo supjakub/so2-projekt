@@ -40,7 +40,6 @@ void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> en
                 soldier->mtx.unlock();
                 break;
             }
-            soldier->mtx.lock();
         }
         if (soldier->dead == 3) {
             soldier->mtx.unlock();
@@ -200,8 +199,8 @@ int main(){
     for (int i = 0; i < 3; i++) {
         blue_storages.push_back(new Storage());
         red_storages.push_back(new Storage());
-        blue_engineers.push_back(new Engineer(i + 1, blue_medic));
-        red_engineers.push_back(new Engineer(i + 1, red_medic));      
+        blue_engineers.push_back(new Engineer(i, blue_medic));
+        red_engineers.push_back(new Engineer(i, red_medic));      
     }
 
     for (int i = 0; i < 15; i++) {

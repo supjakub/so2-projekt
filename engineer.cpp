@@ -34,7 +34,7 @@ void Engineer::inspect(std::vector<Cannon*> cannons) {
     if (this->hp > 0) {
         for (int i = 0; i < 15; i++) {
             if (cannons[i]->destroyed == 2) {
-                cannons[i]->engineer = std::to_string(this->id);
+                cannons[i]->engineer = std::to_string(this->id + 1);
                 this->repair(cannons[i]);
                 cannons[i]->engineer = " ";
             }
