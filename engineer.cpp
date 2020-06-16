@@ -12,9 +12,10 @@ Engineer::Engineer(int n, Medic* friendlyMedic) {
 }
 
 void Engineer::repair(Cannon* cannon) {
-    cannon->lock();
+    cannon->mutex.lock();
     this->status = "naprawia";
     cannon->destroyed = 1;
+    cannon->mutex.unlock();
     int time = rand() % (301) + 300;
     int prog;
     this->progress = "0";
@@ -24,8 +25,9 @@ void Engineer::repair(Cannon* cannon) {
         prog++;
         this->progress = std::to_string(prog);
     }
+    cannon->mutex.lock();
     cannon->repair();
-    cannon->unlock();
+    cannon->mutex.unlock();
     this->status = "czeka   ";
     this->progress = ".";
 }

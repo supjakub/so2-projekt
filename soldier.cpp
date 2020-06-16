@@ -17,7 +17,7 @@ Soldier::Soldier(Cannon* cannon, vector<Storage*> storage, int id, Medic* friend
 void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngineers) {
     while (cannon->destroyed != 0) {
     }
-    cannon->lock();
+    cannon->mutex.lock();
     this->mtx.lock();
     this->status = "strzela     ";
     this->mtx.unlock();
@@ -61,7 +61,7 @@ void Soldier::fire(vector<Soldier*> enemySoldiers, vector<Engineer*> enemyEngine
 
     cannon->destroy();
     cannon->loaded = false;
-    cannon->unlock();
+    cannon->mutex.unlock();
     this->mtx.lock();
     this->status = "czeka       ";
     this->mtx.unlock();

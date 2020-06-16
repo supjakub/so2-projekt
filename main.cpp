@@ -26,22 +26,22 @@ void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> en
         lock(soldier->mtx, soldier->cannon->mutex);
         if (soldier->dead == 0 && soldier->cannon->loaded == false) {
             soldier->mtx.unlock();
-            soldier->cannon->unlock();
+            soldier->cannon->mutex.unlock();
             soldier->reload();
         }
         else {
             soldier->mtx.unlock();
-            soldier->cannon->unlock();
+            soldier->cannon->mutex.unlock();
         }
         lock(soldier->mtx, soldier->cannon->mutex);
         if (soldier->dead == 0 && soldier->cannon->loaded == true) {
             soldier->mtx.unlock();
-            soldier->cannon->unlock();
+            soldier->cannon->mutex.unlock();
             soldier->fire(enemySoldiers, enemyEngineers);
         }
         else {
             soldier->mtx.unlock();
-            soldier->cannon->unlock();
+            soldier->cannon->mutex.unlock();
         }
         soldier->mtx.lock();
         if (soldier->dead == 1) {
