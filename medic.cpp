@@ -6,14 +6,16 @@ Medic::Medic() {
 }
 
 void Medic::inspect(vector<Soldier*> soldiers, vector<Engineer*> engineers) {
-   for (int i = 0; i < 15; i++) {
-       if (soldiers[i]->dead == 1)
-        helpSoldier(soldiers[i]);
+    unique_lock<mutex> lck(this->mtx);
+    this->var.wait(lck);
+    while (!queue.empty()) {
+        int index = queue.back();
+        queue.pop_back();
+        if (index < 15)
+            this->helpSoldier(soldiers[index]);
+        else
+            this->helpEngineer(engineers[index - 15]);
     }
-   for (int i = 0; i < 3; i++) {
-       if (engineers[i]->dead == 1)
-            helpEngineer(engineers[i]);
-   } 
 }
 
 void Medic::helpSoldier(Soldier* soldier) {

@@ -142,7 +142,9 @@ void Soldier::heal(Hospital* hospital) {
 void Soldier::callForHelp() {
     lock_guard<mutex> lck(friendlyMedic->mtx);
     friendlyMedic->queue.push_back(id);
-    friendlyMedic->mtx.unlock();
-    friendlyMedic->var.notify_one();
+    this->mtx.lock();
+    this->dead = 4;
+    this->mtx.unlock();
+    friendlyMedic->var.notify_all();
 }
 

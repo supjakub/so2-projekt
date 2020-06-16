@@ -44,6 +44,13 @@ void soldierExecute(Soldier* soldier, atomic<bool>& running, vector<Soldier*> en
             soldier->cannon->mutex.unlock();
         }
         soldier->mtx.lock();
+        if (soldier->dead == 1) {
+            soldier->mtx.unlock();
+            soldier->callForHelp();
+        }
+        else
+            soldier->mtx.unlock();
+        soldier->mtx.lock();
         if (soldier->dead == 3) {
             soldier->mtx.unlock();
             soldier->heal(hospital);
@@ -60,6 +67,13 @@ void engineerExecute(Engineer* engineer, atomic<bool>& running, vector<Cannon*> 
         if (engineer->dead == 0) {
             engineer->mtx.unlock();
             engineer->inspect(cannons);
+        }
+        else
+            engineer->mtx.unlock();
+        engineer->mtx.lock();
+        if (engineer->dead == 1) {
+            engineer->mtx.unlock();
+            engineer->callForHelp();
         }
         else
             engineer->mtx.unlock();
