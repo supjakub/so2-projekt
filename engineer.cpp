@@ -2,7 +2,7 @@
 using namespace std;
 
 Engineer::Engineer(int n, Medic* friendlyMedic) {
-    this->status = "czeka   ";
+    this->status = "czeka     ";
     this->progress = ".";
     this->hp = 5;
     this->dead = 0;
@@ -12,7 +12,7 @@ Engineer::Engineer(int n, Medic* friendlyMedic) {
 }
 
 void Engineer::repair(Cannon* cannon) {
-    this->status = "naprawia";
+    this->status = "naprawia  ";
     cannon->destroyed = 1;
     int time = rand() % (301) + 300;
     int prog;
@@ -24,7 +24,7 @@ void Engineer::repair(Cannon* cannon) {
         this->progress = std::to_string(prog);
     }
     cannon->repair();
-    this->status = "czeka   ";
+    this->status = "czeka     ";
     this->progress = ".";
 }
 
